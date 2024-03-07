@@ -6,7 +6,8 @@ app = Flask(__name__)
 def bill_splitter():
     transactions = []
     if request.method == 'POST':
-        num_people = int(request.form['counter'])
+        # num_people = int(request.form['num_people'])
+        num_people=2
         people = []
         for i in range(num_people):
             name = request.form[f'person_{i + 1}']

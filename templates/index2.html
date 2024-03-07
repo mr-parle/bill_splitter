@@ -11,48 +11,32 @@
       display: none;
   }
   </style>
-<!-- previous script  -->
-<!--   <script>
-    function validateForm() {
-      for (var i = 1; i <= num_people; i++) {
-        var personName = document.getElementById('person_' + i).value;
-        var expenseAmount = document.getElementById('expense_person_' + i).value;
-        if (personName === "" || expenseAmount === "" || isNaN(expenseAmount) || expenseAmount <= 0) {
-          alert("Please fill out all contributor fields with valid data.");
-          return false;
-        }
-      }
-      return false; // prevent form submission and page reload
-    
-    }
-  </script> -->
 
-<!--   new script -->
     <script>
       console.log("Script is running");
-    document.addEventListener('DOMContentLoaded', function () {
-      if (localStorage.getItem('formSubmitted')) {
-        for (var i = 1; i <= num_people; i++) {
-          document.getElementById('person_' + i).value = '';
-          document.getElementById('expense_person_' + i).value = '';
+      document.addEventListener('DOMContentLoaded', function () {
+        if (localStorage.getItem('formSubmitted')) {
+          for (var i = 1; i <= num_people; i++) {
+            document.getElementById('person_' + i).value = '';
+            document.getElementById('expense_person_' + i).value = '';
+          }
+        } else {
+          for (var i = 1; i <= num_people; i++) {
+            document.getElementById('person_' + i).value = localStorage.getItem('person_' + i) || '';
+            document.getElementById('expense_person_' + i).value = localStorage.getItem('expense_person_' + i) || '';
+          }
         }
-      } else {
+      });
+  
+      window.addEventListener('beforeunload', function () {
+        localStorage.setItem('formSubmitted', 'true');
         for (var i = 1; i <= num_people; i++) {
-          document.getElementById('person_' + i).value = localStorage.getItem('person_' + i) || '';
-          document.getElementById('expense_person_' + i).value = localStorage.getItem('expense_person_' + i) || '';
+          localStorage.setItem('person_' + i, document.getElementById('person_' + i).value);
+          localStorage.setItem('expense_person_' + i, document.getElementById('expense_person_' + i).value);
         }
-      }
-    });
-
-    window.addEventListener('beforeunload', function () {
-      localStorage.setItem('formSubmitted', 'true');
-      for (var i = 1; i <= num_people; i++) {
-        localStorage.setItem('person_' + i, document.getElementById('person_' + i).value);
-        localStorage.setItem('expense_person_' + i, document.getElementById('expense_person_' + i).value);
-      }
-    });
-
+      }); 
     function validateForm() {
+      console.log("Script is running");
       for (var i = 1; i <= counter; i++) {
         var personName = document.getElementById('person_' + i).value;
         var expenseAmount = document.getElementById('expense_person_' + i).value;
@@ -63,20 +47,21 @@
         }
       }
     
-      // add the counter field to the form data
-      var formData = new FormData(document.getElementById('myForm'));
-      formData.append('counter', counter);
-    
-      // send the form data to the server using AJAX
-      var xhr = new XMLHttpRequest();
-      xhr.open('POST', '/submit', true);
-      xhr.send(formData);
-    
-      // prevent the form from being submitted the normal way
-      return false;
-    } 
+       // add the counter field to the form data
+  var formData = new FormData(document.getElementById('myForm'));
+  formData.append('counter', counter); // append counter value to the form data
+
+  // send the form data to the server using AJAX
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', '/submit', true);
+  xhr.send(formData);
+
+  // prevent the form from being submitted the normal way
+  return false;
+} 
     
     function addContributor() {
+      console.log("Script is running");
       var contributorInputs = document.getElementById('contributorInputs');
       var newContributorInput = document.createElement('div');
       newContributorInput.innerHTML = `
@@ -108,7 +93,7 @@
             <input type="number" name="expense[]" id="expense_person_1" placeholder="Amount" />
           </div>
           <div>
-            <input type="text" name="person[]" id="person_2" placeholder="Name" />
+            <input type="text" name="person[]" id="person_2" placeholder="Name" value= {{person_2}}/>
             <input type="number" name="expense[]" id="expense_person_2" placeholder="Amount" />
           </div>
         </div>
