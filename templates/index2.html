@@ -11,7 +11,8 @@
       display: none;
   }
   </style>
-  <script>
+<!-- previous script  -->
+<!--   <script>
     function validateForm() {
       for (var i = 1; i <= num_people; i++) {
         var personName = document.getElementById('person_' + i).value;
@@ -24,32 +25,96 @@
       return false; // prevent form submission and page reload
     
     }
+  </script> -->
+
+<!--   new script -->
+    <script>
+      console.log("Script is running");
+    document.addEventListener('DOMContentLoaded', function () {
+      if (localStorage.getItem('formSubmitted')) {
+        for (var i = 1; i <= num_people; i++) {
+          document.getElementById('person_' + i).value = '';
+          document.getElementById('expense_person_' + i).value = '';
+        }
+      } else {
+        for (var i = 1; i <= num_people; i++) {
+          document.getElementById('person_' + i).value = localStorage.getItem('person_' + i) || '';
+          document.getElementById('expense_person_' + i).value = localStorage.getItem('expense_person_' + i) || '';
+        }
+      }
+    });
+
+    window.addEventListener('beforeunload', function () {
+      localStorage.setItem('formSubmitted', 'true');
+      for (var i = 1; i <= num_people; i++) {
+        localStorage.setItem('person_' + i, document.getElementById('person_' + i).value);
+        localStorage.setItem('expense_person_' + i, document.getElementById('expense_person_' + i).value);
+      }
+    });
+
+    function validateForm() {
+      for (var i = 1; i <= counter; i++) {
+        var personName = document.getElementById('person_' + i).value;
+        var expenseAmount = document.getElementById('expense_person_' + i).value;
+    
+        if (personName === '' || expenseAmount === '' || isNaN(expenseAmount) || expenseAmount <= 0) {
+          alert('Please fill out all contributor fields with valid data.');
+          return false;
+        }
+      }
+    
+      // add the counter field to the form data
+      var formData = new FormData(document.getElementById('myForm'));
+      formData.append('counter', counter);
+    
+      // send the form data to the server using AJAX
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', '/submit', true);
+      xhr.send(formData);
+    
+      // prevent the form from being submitted the normal way
+      return false;
+    } 
+    
+    function addContributor() {
+      var contributorInputs = document.getElementById('contributorInputs');
+      var newContributorInput = document.createElement('div');
+      newContributorInput.innerHTML = `
+        <div>
+          <input type="text" name="person[]" id="person_${counter}" placeholder="Name" />
+          <input type="number" name="expense[]" id="expense_person_${counter}" placeholder="Amount" />
+        </div>
+      `;
+      contributorInputs.appendChild(newContributorInput);
+      counter++;
+      document.getElementById('counter').value = counter;
+      
+    }
+    
+    // Initialize counter to 3 (as there are already 2 input fields)
+    let counter = 3;
+    
   </script>
 </head>
 <body>
-  <h1>Group Bill Splitter</h1>
+  <h1>Group Bill Splitterrr</h1>
   <div class="container">
     <form action="/submit" id= "myForm" method="post">
       <div id="contributors">
         <label>Contributors:</label>
         <div id="contributorInputs">
           <div>
-            <input id="person_1" name="person_1" type="text" placeholder="Name" />
-            <input id="expense_person_1" name="expense_person_1" type="number" placeholder="Amount" />
+            <input type="text" name="person[]" id="person_1" placeholder="Name" />
+            <input type="number" name="expense[]" id="expense_person_1" placeholder="Amount" />
           </div>
           <div>
-            <input id="person_2" name="person_2" type="text" placeholder="Name" />
-            <input id="expense_person_2" name="expense_person_2" type="number" placeholder="Amount" />
-          </div>
-          <div>
-            <input id="person_3" name="person_3" type="text" placeholder="Name" />
-            <input id="expense_person_3" name="expense_person_3" type="number" placeholder="Amount" />
+            <input type="text" name="person[]" id="person_2" placeholder="Name" />
+            <input type="number" name="expense[]" id="expense_person_2" placeholder="Amount" />
           </div>
         </div>
-        
+        <button type="button" name="add_contributor" onclick="addContributor()">Add Contributor</button>
         <button type="submit" name="split_bill" onclick="return validateForm({{ num_people }})">Split Bill</button>
-        <div id="results"></div>
-      </div>
+      
     </form>
   </div>
 {#  <script>
