@@ -9,8 +9,8 @@ def bill_splitter():
         # num_people = int(request.form['num_people'])
         num_people=2
         people = []
-        for i in range(num_people):
-            name = request.form[f'person_{i + 1}']
+        for i in range(1,num_people):
+            name = request.form[f'person_{i}']
             people.append(name)
         print(people)
         expenses = []
