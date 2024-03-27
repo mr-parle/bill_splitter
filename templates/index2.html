@@ -60,6 +60,7 @@
   return false;
 } 
     
+let counter = 3;
     function addContributor() {
       console.log("Script is running");
       var contributorInputs = document.getElementById('contributorInputs');
@@ -77,7 +78,6 @@
     }
     
     // Initialize counter to 3 (as there are already 2 input fields)
-    let counter = 3;
     
   </script>
 </head>
@@ -93,7 +93,7 @@
             <input type="number" name="expense[]" id="expense_person_1" placeholder="Amount" />
           </div>
           <div>
-            <input type="text" name="person[]" id="person_2" placeholder="Name" value= {{person_2}}/>
+            <input type="text" name="person[]" id="person_2" placeholder="Name"/>
             <input type="number" name="expense[]" id="expense_person_2" placeholder="Amount" />
           </div>
         </div>
